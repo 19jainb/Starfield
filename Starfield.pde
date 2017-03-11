@@ -28,24 +28,32 @@ void draw()
 class NormalParticle implements Particle
 {
   double dX, dY, dTheta, dSpeed;
+  boolean onWayDown, normal;
   
   public NormalParticle() {
-    dX = 320;
-    dY = 240;
+    dX = 500;
+    dY = 500;
     dTheta = Math.random() * 2 * Math.PI;
+    dSpeed = Math.random() * 10;
+    normal = true;
   }
   
   public void move() {
-    dSpeed = Math.random() * 10;
     dX += Math.cos(dTheta) * dSpeed;
     dY += Math.sin(dTheta) * dSpeed;
     
     dTheta += 0.1;
+    if (dSpeed < 50) {
+      dSpeed += 0.1;
+    } else {
+      if (normal) dSpeed = 10;
+      else dSpeed -= 3;
+    }
   }
   
   public void show() {
     fill((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256));
-    ellipse((float) dX, (float) dY, 20, 20);
+    ellipse((float) dX, (float) dY, 7.5, 7.5);
   }
 }
 
@@ -57,27 +65,48 @@ interface Particle
 
 class OddballParticle implements Particle //uses an interface
 {
-  double dX, dY, dTheta, dSpeed;
+  double dX, dY, dTheta, dSpeed, dXBounce, dYBounce;
+  boolean goUp, goDown, goLeft, goRight;
   
   public OddballParticle() {
-    dX = 700;
-    dY = 400;
-    dTheta = Math.random() * 3 * Math.PI;
+    dX = 500;
+    dY = 500;
+    dTheta = Math.random() * 2 * Math.PI;
+    
+    goUp = false;
+    goDown = false;
+    goLeft = false;
+    goRight = false;
+    
+    dSpeed = 50;
+    
+    dXBounce = Math.cos(dTheta) * dSpeed;
+    dYBounce = Math.sin(dTheta) * dSpeed;
   }
   
   public void move() {
-    dSpeed = Math.random() * 15;
-    dX += Math.cos(dTheta) * dSpeed;
-    dY += Math.sin(dTheta) * dSpeed;
+    if (dX <= 0) {
+        dXBounce *= -1;
+    } else if (dX >= 1000) {
+        dXBounce *= -1;
+    }
     
-    dTheta += 0.5;
+    if (dY <= 0) {
+        dYBounce *= -1;
+    } else if (dY >= 1000) {
+        dYBounce *= -1;
+    }
+      
+    dX += dXBounce;
+    dY += dYBounce;
   }
   
   public void show() {
     fill((int) (Math.random() * 256), (int) (Math.random() * 256), (int) (Math.random() * 256));
-    rect((float) dX, (float) dY, 10, 10);
+    rect((float) dX, (float) dY, 25, 25);
   }
 }
+
 class JumboParticle extends NormalParticle //uses inheritance
 {
   double radius;
@@ -88,6 +117,7 @@ class JumboParticle extends NormalParticle //uses inheritance
     dY = 500;
     radius = 10;
     onWayDown = false;
+    normal = false;
   }
   
   public void show() {
