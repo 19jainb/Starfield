@@ -1,3 +1,7 @@
+/* AP JAVA pd. 6
+by Bhav Jain - Starfield Project - Mrs. Garda - 3/10/2017
+*/
+
 Particle[] particles;
 
 void setup()
